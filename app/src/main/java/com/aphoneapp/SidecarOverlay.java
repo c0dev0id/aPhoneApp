@@ -27,6 +27,8 @@ class SidecarOverlay {
     private static final int TAB_COUNT = 3;
 
     private static final String DMD_REMOTE_ACTION = "com.thorkracing.wireddevices.keypress";
+    private static final int KEYCODE_UP      = 19;
+    private static final int KEYCODE_DOWN    = 20;
     private static final int KEYCODE_LEFT    = 21;
     private static final int KEYCODE_RIGHT   = 22;
     private static final int KEYCODE_BUTTON1 = 66;
@@ -42,8 +44,8 @@ class SidecarOverlay {
     private FrameLayout contentFrame;
 
     private int currentTab = TAB_HISTORY;
-    // Whether focus is locked inside the dialpad component (Phase 7)
     private boolean dialpadActive = false;
+    private TabContent[] tabContents;
 
     private final BroadcastReceiver remoteReceiver = new BroadcastReceiver() {
         @Override
@@ -81,6 +83,12 @@ class SidecarOverlay {
                 PixelFormat.TRANSLUCENT
         );
         params.gravity = Gravity.TOP | Gravity.START;
+
+        tabContents = new TabContent[]{
+            new HistoryTab(context),
+            null, // Phase 6: ContactsTab
+            null, // Phase 7: DialpadTab
+        };
 
         windowManager.addView(overlayView, params);
         selectTab(TAB_HISTORY);
@@ -122,6 +130,12 @@ class SidecarOverlay {
             tabViews[i].setTextColor(i == tab ? activeColor : inactiveColor);
         }
 
+        // Load tab content
+        contentFrame.removeAllViews();
+        if (tabContents[tab] != null) {
+            contentFrame.addView(tabContents[tab].getView());
+        }
+
         // Slide the indicator under the selected tab
         tabViews[tab].post(() -> {
             if (tabIndicator == null) return;
@@ -149,11 +163,14 @@ class SidecarOverlay {
             case KEYCODE_RIGHT:
                 if (currentTab < TAB_COUNT - 1) selectTab(currentTab + 1);
                 break;
+            case KEYCODE_UP:
+            case KEYCODE_DOWN:
             case KEYCODE_BUTTON1:
                 if (currentTab == TAB_DIALPAD) {
-                    dialpadActive = true;
+                    if (keyCode == KEYCODE_BUTTON1) dialpadActive = true;
+                } else if (tabContents[currentTab] != null) {
+                    tabContents[currentTab].onKeyDown(keyCode);
                 }
-                // History and Contacts: BUTTON 1 on the selected list item — handled by tab content (Phase 5/6)
                 break;
             case KEYCODE_BUTTON2:
                 remove();

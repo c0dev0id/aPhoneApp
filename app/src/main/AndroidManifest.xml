@@ -36,6 +36,7 @@
             android:name=".MainActivity"
             android:exported="false"
             android:launchMode="singleTask"
+            android:theme="@style/Theme.APhoneApp.Transparent"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
 
         <service

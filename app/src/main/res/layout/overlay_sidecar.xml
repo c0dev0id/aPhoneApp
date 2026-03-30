@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background_dark">
+
+    <!-- Tab bar -->
+    <LinearLayout
+        android:id="@+id/tab_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/surface_dark">
+
+        <TextView
+            android:id="@+id/tab_history"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="16dp"
+            android:textSize="@dimen/text_size_medium"
+            android:text="History" />
+
+        <TextView
+            android:id="@+id/tab_contacts"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="16dp"
+            android:textSize="@dimen/text_size_medium"
+            android:text="Contacts" />
+
+        <TextView
+            android:id="@+id/tab_dialpad"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="16dp"
+            android:textSize="@dimen/text_size_medium"
+            android:text="Dialpad" />
+
+    </LinearLayout>
+
+    <!-- Tab indicator bar -->
+    <View
+        android:id="@+id/tab_indicator"
+        android:layout_width="0dp"
+        android:layout_height="3dp"
+        android:background="@color/button_active" />
+
+    <!-- Content area -->
+    <FrameLayout
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+</LinearLayout>

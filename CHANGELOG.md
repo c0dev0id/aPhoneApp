@@ -13,3 +13,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Stub classes for PermissionActivity, MainActivity, and PhoneCallService
 - Permission gate: requests contacts, call log, phone, phone state, overlay, and default dialer in sequence before showing any UI — all must be granted to proceed
 - Calling card overlay: handles incoming calls (accept/decline), outgoing calls (Calling…/duration), and active calls (timer, end call) via DMD Remote 2 BUTTON 1/2 or touch
+- Sidecar overlay: full-screen overlay with History/Contacts/Dialpad tab bar; LEFT/RIGHT navigates tabs (no wrap), BUTTON 2 closes

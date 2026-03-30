@@ -1,8 +1,44 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
 This file contains important informations for AI agents like claude, chatgpt and copilot.
 
 # *MOST IMPORTANT RULES THAT MUST BE FOLLOWED*
 - *Always commit* every logical step! Don't batch unrelated changes into one commit.
 - *Always rebase* the working branch onto the latest main (or master, if main doesn't exist) at the end of a task. Resolve any conflicts during the rebase.
+
+# Project Overview
+
+Android phone/contacts app optimized for motorcycle use with the DMD Remote 2 hardware controller. Touch input is entirely optional — the primary interface is physical button navigation.
+
+DMD Remote 2 spec and button event reference: https://github.com/johnkeel-thork/DMD-For-Devs/blob/main/ControllerExample.java
+
+## Architecture
+
+The app has two distinct UI surfaces, both implemented as overlays:
+
+1. **Incoming Call Overlay** — shown when a call arrives; accept (BUTTON 1) / decline (BUTTON 2)
+2. **Sidecar Overlay** — launched from the home screen for initiating calls; two tabs:
+   - *History* tab (default): incoming/outgoing calls, newest first
+   - *Contacts* tab: favorites first, then alphabetical
+
+Both overlays quit the app on call end or BUTTON 2 dismiss. There is no persistent background activity beyond call reception.
+
+## Remote Button Mappings
+
+| Button   | Sidecar         | Active Call     | Incoming Call |
+|----------|-----------------|-----------------|---------------|
+| BUTTON 1 | Initiate call   | —               | Accept        |
+| BUTTON 2 | Quit app        | End call + quit | Decline       |
+| UP/DOWN  | Navigate list   | —               | —             |
+| LEFT/RIGHT | Switch tabs   | —               | —             |
+
+## UI Constraints
+
+- Text sizes: **18sp, 22sp, 28sp** only
+- Font: **Apotek** — copy from `/home/sdk/androdash/app/src/main/res/font`
+- All interactive elements must be usable with gloves (large hit targets)
 
 # Keep A Changelog
 Maintain a CHANGELOG.md file in every project, following the specification at:
@@ -31,8 +67,9 @@ If a .gh_token file is present, use the token to access GitHub and read CI/CD wo
 Do not attempt to build Android projects locally. All builds are handled by CI/CD.
 AGP cannot be accessed due to firewall restrictions. Do not try to work around this.
 
-# Library and Framework usage
-- Always use the latest version available
+# Library and Framework Usage
+- Always use the latest version available.
+- Before implementing a feature from scratch, check whether the libraries and frameworks already in use provide built-in support for it — possibly in a different form than the user requested. If so, explain the available capabilities and let the user decide how to adjust the request.
 
 # Code Style
 - KISS — Keep it Simple, Stupid.
@@ -56,8 +93,3 @@ AGP cannot be accessed due to firewall restrictions. Do not try to work around t
 - The user is a minimalist who values performance, low latency and over feature richness.
 - The user prefers clean software architecture and technical correctness and will adapt workflow or feature expectations to fit the software stack rather than accept complex code or workarounds.
 - The user may not be aware of all capabilities offered by the libraries and frameworks in use.
-
-# Library and Framework Usage
-- Always use the latest version available.
-- Before implementing a feature from scratch, check whether the libraries and frameworks already in use provide built-in support for it — possibly in a different form than the user requested. If so, explain the available capabilities and let the user decide how to adjust the request.
-  - Example: The user asks for a specific animation that would require a custom implementation, but the UI framework already provides a set of built-in animations. Present those options and let the user choose.

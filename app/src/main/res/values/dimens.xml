@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="corner_radius">16dp</dimen>
+    <dimen name="text_size_small">18sp</dimen>
+    <dimen name="text_size_medium">22sp</dimen>
+    <dimen name="text_size_large">28sp</dimen>
+    <dimen name="card_padding">8dp</dimen>
+    <dimen name="list_item_height">64dp</dimen>
+    <dimen name="list_spacing">6dp</dimen>
+</resources>

@@ -4,7 +4,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="24dp"
-    android:margin="16dp"
     android:background="@drawable/bg_overlay_card">
 
     <TextView

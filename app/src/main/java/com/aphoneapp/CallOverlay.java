@@ -6,6 +6,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.telecom.Call;
 import android.telecom.VideoProfile;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -62,14 +64,20 @@ class CallOverlay {
         btnAccept = overlayView.findViewById(R.id.btn_accept);
         btnDecline = overlayView.findViewById(R.id.btn_decline);
 
+        DisplayMetrics dm = context.getResources().getDisplayMetrics();
+        int width   = (int) (dm.widthPixels * 0.45f);
+        int margin  = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, dm));
+
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.MATCH_PARENT,
+                width,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT
         );
-        params.gravity = Gravity.CENTER;
+        params.gravity = Gravity.TOP | Gravity.END;
+        params.x = margin;
+        params.y = margin;
 
         windowManager.addView(overlayView, params);
     }

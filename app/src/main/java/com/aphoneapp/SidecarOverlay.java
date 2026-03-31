@@ -101,6 +101,11 @@ class SidecarOverlay {
             new DialpadTab(context),
         };
 
+        for (int i = 0; i < TAB_COUNT; i++) {
+            final int tab = i;
+            tabViews[i].setOnClickListener(v -> selectTab(tab));
+        }
+
         windowManager.addView(overlayView, params);
         selectTab(TAB_HISTORY);
         registerRemoteReceiver();

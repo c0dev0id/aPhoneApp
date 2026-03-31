@@ -17,3 +17,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - History tab: call log sorted newest first with incoming/missed/outgoing icons; missed calls in red; UP/DOWN + BUTTON 1 to call
 - Contacts tab: one entry per phone number, favorites first then alphabetical; two-line display (name + type: number); UP/DOWN + BUTTON 1 to call
 - Dialpad tab: 4x3 digit grid plus DEL and Call; BUTTON 1 enters dialpad mode, arrow keys navigate, BUTTON 2 returns to tab bar
+- Incoming call while sidecar is open: sidecar dims and freezes input, calling card takes exclusive focus; sidecar undims and resumes when call ends

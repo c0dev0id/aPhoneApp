@@ -15,3 +15,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Calling card overlay: handles incoming calls (accept/decline), outgoing calls (Calling…/duration), and active calls (timer, end call) via DMD Remote 2 BUTTON 1/2 or touch
 - Sidecar overlay: full-screen overlay with History/Contacts/Dialpad tab bar; LEFT/RIGHT navigates tabs (no wrap), BUTTON 2 closes
 - History tab: call log sorted newest first with incoming/missed/outgoing icons; missed calls in red; UP/DOWN + BUTTON 1 to call
+- Contacts tab: one entry per phone number, favorites first then alphabetical; two-line display (name + type: number); UP/DOWN + BUTTON 1 to call

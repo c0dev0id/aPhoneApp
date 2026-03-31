@@ -8,8 +8,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.widget.Button;
-import android.widget.TextView;
 
 public class PermissionActivity extends Activity {
 
@@ -24,15 +22,10 @@ public class PermissionActivity extends Activity {
         Manifest.permission.READ_PHONE_STATE,
     };
 
-    private TextView textStatus;
-    private Button btnGrant;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_permission);
-        textStatus = findViewById(R.id.text_status);
-        btnGrant   = findViewById(R.id.btn_grant);
+        // Transparent — no layout, no UI of our own.
     }
 
     @Override
@@ -43,43 +36,34 @@ public class PermissionActivity extends Activity {
 
     private void checkAndProceed() {
         if (!hasRuntimePermissions()) {
-            textStatus.setText("aPhoneApp needs access to your contacts, call log, and phone to function.");
-            btnGrant.setOnClickListener(v ->
-                    requestPermissions(RUNTIME_PERMISSIONS, REQUEST_RUNTIME_PERMISSIONS));
+            requestPermissions(RUNTIME_PERMISSIONS, REQUEST_RUNTIME_PERMISSIONS);
             return;
         }
 
         if (!Settings.canDrawOverlays(this)) {
-            textStatus.setText("aPhoneApp needs permission to display over other apps.");
-            btnGrant.setOnClickListener(v -> {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        Uri.parse("package:" + getPackageName()));
-                startActivityForResult(intent, REQUEST_OVERLAY_PERMISSION);
-            });
+            startActivityForResult(
+                    new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                            Uri.parse("package:" + getPackageName())),
+                    REQUEST_OVERLAY_PERMISSION);
             return;
         }
 
         if (!isDefaultDialer()) {
-            textStatus.setText("aPhoneApp must be set as the default phone app to handle calls.");
-            btnGrant.setOnClickListener(v -> requestDefaultDialerRole());
+            RoleManager roleManager = getSystemService(RoleManager.class);
+            if (roleManager.isRoleAvailable(RoleManager.ROLE_DIALER)) {
+                startActivityForResult(
+                        roleManager.createRequestRoleIntent(RoleManager.ROLE_DIALER),
+                        REQUEST_DEFAULT_DIALER);
+            }
             return;
         }
 
-        startActivity(new Intent(this, MainActivity.class));
+        startForegroundService(new Intent(this, SidecarService.class));
         finish();
     }
 
-    private void requestDefaultDialerRole() {
-        RoleManager roleManager = getSystemService(RoleManager.class);
-        if (roleManager.isRoleAvailable(RoleManager.ROLE_DIALER)) {
-            Intent intent = roleManager.createRequestRoleIntent(RoleManager.ROLE_DIALER);
-            startActivityForResult(intent, REQUEST_DEFAULT_DIALER);
-        }
-    }
-
     private boolean isDefaultDialer() {
-        RoleManager roleManager = getSystemService(RoleManager.class);
-        return roleManager.isRoleHeld(RoleManager.ROLE_DIALER);
+        return getSystemService(RoleManager.class).isRoleHeld(RoleManager.ROLE_DIALER);
     }
 
     private boolean hasRuntimePermissions() {
@@ -93,11 +77,11 @@ public class PermissionActivity extends Activity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        // onResume will re-evaluate
+        // onResume re-evaluates on return
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // onResume will re-evaluate
+        // onResume re-evaluates on return
     }
 }

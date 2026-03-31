@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_PHONE_CALL" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
 
     <uses-feature android:name="android.hardware.telephony" android:required="false" />
 
@@ -26,6 +27,7 @@
             android:exported="true"
             android:launchMode="singleTask"
             android:excludeFromRecents="true"
+            android:theme="@style/Theme.APhoneApp.Transparent"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -60,12 +62,14 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".MainActivity"
+        <service
+            android:name=".SidecarService"
             android:exported="false"
-            android:launchMode="singleTask"
-            android:theme="@style/Theme.APhoneApp.Transparent"
-            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Sidecar overlay UI for in-car phone navigation" />
+        </service>
 
         <service
             android:name=".PhoneCallService"

@@ -86,7 +86,7 @@ class SidecarOverlay {
 
         tabContents = new TabContent[]{
             new HistoryTab(context),
-            null, // Phase 6: ContactsTab
+            new ContactsTab(context),
             null, // Phase 7: DialpadTab
         };
 

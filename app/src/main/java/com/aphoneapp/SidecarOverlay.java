@@ -87,7 +87,7 @@ class SidecarOverlay {
         tabContents = new TabContent[]{
             new HistoryTab(context),
             new ContactsTab(context),
-            null, // Phase 7: DialpadTab
+            new DialpadTab(context),
         };
 
         windowManager.addView(overlayView, params);
@@ -148,9 +148,11 @@ class SidecarOverlay {
 
     private void handleRemoteKey(int keyCode) {
         if (dialpadActive) {
-            // Dialpad mode: BUTTON 2 exits back to tab bar; all other keys go to dialpad (Phase 7)
             if (keyCode == KEYCODE_BUTTON2) {
                 dialpadActive = false;
+                tabContents[TAB_DIALPAD].onDeactivated();
+            } else {
+                tabContents[TAB_DIALPAD].onKeyDown(keyCode);
             }
             return;
         }
@@ -167,7 +169,8 @@ class SidecarOverlay {
             case KEYCODE_DOWN:
             case KEYCODE_BUTTON1:
                 if (currentTab == TAB_DIALPAD) {
-                    if (keyCode == KEYCODE_BUTTON1) dialpadActive = true;
+                    dialpadActive = true;
+                    tabContents[TAB_DIALPAD].onActivated();
                 } else if (tabContents[currentTab] != null) {
                     tabContents[currentTab].onKeyDown(keyCode);
                 }

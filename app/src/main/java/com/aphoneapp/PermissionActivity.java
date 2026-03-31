@@ -2,20 +2,20 @@ package com.aphoneapp;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.role.RoleManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.telecom.TelecomManager;
 import android.widget.Button;
 import android.widget.TextView;
 
 public class PermissionActivity extends Activity {
 
     private static final int REQUEST_RUNTIME_PERMISSIONS = 1;
-    private static final int REQUEST_OVERLAY_PERMISSION = 2;
-    private static final int REQUEST_DEFAULT_DIALER = 3;
+    private static final int REQUEST_OVERLAY_PERMISSION  = 2;
+    private static final int REQUEST_DEFAULT_DIALER      = 3;
 
     private static final String[] RUNTIME_PERMISSIONS = {
         Manifest.permission.READ_CONTACTS,
@@ -32,7 +32,7 @@ public class PermissionActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_permission);
         textStatus = findViewById(R.id.text_status);
-        btnGrant = findViewById(R.id.btn_grant);
+        btnGrant   = findViewById(R.id.btn_grant);
     }
 
     @Override
@@ -44,7 +44,8 @@ public class PermissionActivity extends Activity {
     private void checkAndProceed() {
         if (!hasRuntimePermissions()) {
             textStatus.setText("aPhoneApp needs access to your contacts, call log, and phone to function.");
-            btnGrant.setOnClickListener(v -> requestPermissions(RUNTIME_PERMISSIONS, REQUEST_RUNTIME_PERMISSIONS));
+            btnGrant.setOnClickListener(v ->
+                    requestPermissions(RUNTIME_PERMISSIONS, REQUEST_RUNTIME_PERMISSIONS));
             return;
         }
 
@@ -60,11 +61,7 @@ public class PermissionActivity extends Activity {
 
         if (!isDefaultDialer()) {
             textStatus.setText("aPhoneApp must be set as the default phone app to handle calls.");
-            btnGrant.setOnClickListener(v -> {
-                Intent intent = new Intent(TelecomManager.ACTION_CHANGE_DEFAULT_DIALER);
-                intent.putExtra(TelecomManager.EXTRA_CHANGE_DEFAULT_DIALER_PACKAGE_NAME, getPackageName());
-                startActivityForResult(intent, REQUEST_DEFAULT_DIALER);
-            });
+            btnGrant.setOnClickListener(v -> requestDefaultDialerRole());
             return;
         }
 
@@ -72,14 +69,17 @@ public class PermissionActivity extends Activity {
         finish();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        // onResume will re-evaluate — no need to act here
+    private void requestDefaultDialerRole() {
+        RoleManager roleManager = getSystemService(RoleManager.class);
+        if (roleManager.isRoleAvailable(RoleManager.ROLE_DIALER)) {
+            Intent intent = roleManager.createRequestRoleIntent(RoleManager.ROLE_DIALER);
+            startActivityForResult(intent, REQUEST_DEFAULT_DIALER);
+        }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // onResume will re-evaluate — no need to act here
+    private boolean isDefaultDialer() {
+        RoleManager roleManager = getSystemService(RoleManager.class);
+        return roleManager.isRoleHeld(RoleManager.ROLE_DIALER);
     }
 
     private boolean hasRuntimePermissions() {
@@ -91,8 +91,13 @@ public class PermissionActivity extends Activity {
         return true;
     }
 
-    private boolean isDefaultDialer() {
-        TelecomManager telecom = getSystemService(TelecomManager.class);
-        return getPackageName().equals(telecom.getDefaultDialerPackage());
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        // onResume will re-evaluate
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // onResume will re-evaluate
     }
 }

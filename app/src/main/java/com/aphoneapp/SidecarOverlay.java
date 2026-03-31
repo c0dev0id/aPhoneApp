@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.PixelFormat;
 import android.os.Build;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -76,14 +78,22 @@ class SidecarOverlay {
         tabIndicator = overlayView.findViewById(R.id.tab_indicator);
         contentFrame = overlayView.findViewById(R.id.content_frame);
 
+        DisplayMetrics dm = context.getResources().getDisplayMetrics();
+        int width    = (int) (dm.widthPixels  * 0.45f);
+        int height   = (int) (dm.heightPixels * 0.95f);
+        int marginX  = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, dm));
+        int marginY  = (dm.heightPixels - height) / 2;
+
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.MATCH_PARENT,
+                width,
+                height,
                 WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT
         );
-        params.gravity = Gravity.TOP | Gravity.START;
+        params.gravity = Gravity.TOP | Gravity.END;
+        params.x = marginX;
+        params.y = marginY;
 
         tabContents = new TabContent[]{
             new HistoryTab(context),

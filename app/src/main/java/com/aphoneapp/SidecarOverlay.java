@@ -76,7 +76,11 @@ class SidecarOverlay {
             overlayView.findViewById(R.id.tab_dialpad)
         };
         tabIndicator = overlayView.findViewById(R.id.tab_indicator);
-        contentFrame = overlayView.findViewById(R.id.content_frame);
+        contentFrame  = overlayView.findViewById(R.id.content_frame);
+        overlayView.findViewById(R.id.btn_close).setOnClickListener(v -> {
+            remove();
+            if (dismissListener != null) dismissListener.onDismiss();
+        });
 
         DisplayMetrics dm = context.getResources().getDisplayMetrics();
         int width    = (int) (dm.widthPixels  * 0.45f);

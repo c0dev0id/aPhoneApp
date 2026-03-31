@@ -61,4 +61,14 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
+    <!-- Close button -->
+    <Button
+        android:id="@+id/btn_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="12dp"
+        android:text="Close"
+        android:textSize="@dimen/text_size_small" />
+
 </LinearLayout>

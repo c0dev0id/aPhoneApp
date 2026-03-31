@@ -45,6 +45,7 @@ class SidecarOverlay {
 
     private int currentTab = TAB_HISTORY;
     private boolean dialpadActive = false;
+    private boolean inputFrozen = false;
     private TabContent[] tabContents;
 
     private final BroadcastReceiver remoteReceiver = new BroadcastReceiver() {
@@ -115,10 +116,11 @@ class SidecarOverlay {
         return contentFrame;
     }
 
-    /** Called by PhoneCallService to dim the sidecar during an incoming call. */
+    /** Dims the sidecar and freezes its input while a call overlay has focus. */
     void setDimmed(boolean dimmed) {
         if (overlayView == null) return;
         overlayView.setAlpha(dimmed ? 0.3f : 1.0f);
+        inputFrozen = dimmed;
     }
 
     private void selectTab(int tab) {
@@ -147,6 +149,8 @@ class SidecarOverlay {
     }
 
     private void handleRemoteKey(int keyCode) {
+        if (inputFrozen) return;
+
         if (dialpadActive) {
             if (keyCode == KEYCODE_BUTTON2) {
                 dialpadActive = false;

@@ -15,11 +15,13 @@ public class MainActivity extends Activity implements SidecarOverlay.OnDismissLi
         WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
         sidecarOverlay = new SidecarOverlay(this, wm, this);
         sidecarOverlay.show();
+        AppState.get().setSidecarOverlay(sidecarOverlay);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        AppState.get().setSidecarOverlay(null);
         if (sidecarOverlay != null && sidecarOverlay.isShown()) {
             sidecarOverlay.remove();
         }

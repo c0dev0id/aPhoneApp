@@ -48,6 +48,11 @@ public class PhoneCallService extends InCallService {
     public void onCallAdded(Call call) {
         super.onCallAdded(call);
 
+        SidecarOverlay sidecar = AppState.get().getSidecarOverlay();
+        if (sidecar != null && sidecar.isShown()) {
+            sidecar.setDimmed(true);
+        }
+
         if (callOverlay == null) {
             WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
             callOverlay = new CallOverlay(this, wm);
@@ -69,6 +74,11 @@ public class PhoneCallService extends InCallService {
             if (callOverlay != null) {
                 callOverlay.remove();
                 callOverlay = null;
+            }
+
+            SidecarOverlay sidecar = AppState.get().getSidecarOverlay();
+            if (sidecar != null && sidecar.isShown()) {
+                sidecar.setDimmed(false);
             }
         }
     }
